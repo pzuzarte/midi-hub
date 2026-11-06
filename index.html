@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIDI Hub</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  // Set before the page draws, so it doesn't flash the other theme.
+  try { if (localStorage.getItem("midi-hub-theme") === "light") document.documentElement.dataset.theme = "light"; } catch {}
+</script>
+<!-- Counts visits anonymously. A fixed version with a checksum, and the tool works if it's blocked. -->
+<script data-goatcounter="https://pzuzarte.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.v5.js"
+        crossorigin="anonymous"
+        integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"></script>
+</head>
+<body>
+
+<header class="bar">
+  <h1>MIDI Hub</h1>
+  <label>Setup
+    <select id="scene"></select>
+  </label>
+  <button id="scene-save" type="button" title="Keep the current routes under a name">Save setup</button>
+  <button id="scene-delete" type="button">Delete</button>
+  <div class="spacer"></div>
+  <span id="midi-state" class="pill">MIDI: starting</span>
+  <button id="midi-retry" type="button" hidden>Allow MIDI</button>
+  <button id="panic" type="button" title="Sends all notes off to every instrument">Panic</button>
+  <button id="theme-toggle" type="button" title="Switch between dark and light mode">Light mode</button>
+  <button id="help-open" type="button" title="Help (press ?)">Help</button>
+</header>
+
+<div class="main">
+  <div class="column">
+    <section class="card" aria-labelledby="quick-title">
+      <div class="card-head">
+        <h2 id="quick-title">Quick routes</h2>
+      </div>
+      <div class="quick-row">
+        <span class="quick-label">Keyboard plays<small id="keys-source"></small></span>
+        <div id="keys-targets" class="quick-targets"></div>
+        <div class="spacer"></div>
+        <label title="Moves everything the keyboard plays up or down">Octave
+          <select id="keys-octave"></select>
+        </label>
+      </div>
+      <div class="quick-row">
+        <span class="quick-label">S-1 sequencer plays<small id="s1-source"></small></span>
+        <div id="s1-targets" class="quick-targets"></div>
+      </div>
+      <div class="quick-row">
+        <span class="quick-label">Clock comes from<small>Tempo, start and stop</small></span>
+        <select id="clock-source" aria-label="Clock source"></select>
+        <div id="clock-targets" class="quick-targets"></div>
+      </div>
+      <p class="card-note">Click an instrument to route to it, and again to stop. Several at once layer them. Each one gets its own channel from the Devices list.</p>
+    </section>
+
+    <section class="card" aria-labelledby="routes-title">
+      <div class="card-head">
+        <h2 id="routes-title">All routes</h2>
+        <div class="spacer"></div>
+        <button id="route-add" type="button">Add route</button>
+      </div>
+      <div class="routes-wrap">
+        <table class="routes">
+          <thead>
+            <tr>
+              <th>On</th><th>From</th><th>Channel</th><th>To</th><th>Channel</th>
+              <th title="Notes and poly aftertouch">Notes</th><th title="Controllers, pitch bend and aftertouch">Knobs</th>
+              <th title="Program changes">Prog</th><th title="Clock, start, stop and song position">Clock</th><th title="Semitones">Transpose</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="routes"></tbody>
+        </table>
+      </div>
+      <p id="routes-empty" class="routes-empty">No routes yet. Use the quick routes above, or Add route.</p>
+    </section>
+  </div>
+
+  <div class="column">
+    <section class="card" aria-labelledby="devices-title">
+      <div class="card-head">
+        <h2 id="devices-title">Devices</h2>
+      </div>
+      <ul id="devices" class="devices"></ul>
+      <p class="card-note">Each port is recognised by its name. If one is wrong, choose what it is. The channel is the one the instrument listens on.</p>
+    </section>
+
+    <section class="card" aria-labelledby="monitor-title">
+      <div class="card-head">
+        <h2 id="monitor-title">Monitor</h2>
+        <div class="spacer"></div>
+        <label class="check"><input id="monitor-on" type="checkbox"> Show messages</label>
+        <button id="monitor-clear" type="button">Clear</button>
+      </div>
+      <pre id="monitor" class="monitor" aria-live="off"></pre>
+    </section>
+  </div>
+</div>
+
+<footer class="bar foot">
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <button id="export" type="button" title="Download your setups, routes and device settings as a file">Back up</button>
+  <button id="import" type="button" title="Load setups, routes and device settings from a backup file">Restore</button>
+  <input id="import-file" type="file" accept=".json,application/json" hidden>
+</footer>
+
+<dialog id="help" class="help" aria-labelledby="help-title">
+  <div class="help-head">
+    <h2 id="help-title">MIDI Hub help</h2>
+    <button id="help-close" type="button">Close</button>
+  </div>
+  <div class="help-body" tabindex="0">
+    <p>Routes MIDI between your instruments and a keyboard controller, from one page. Every instrument connects to this computer over USB, and the page passes messages between them as they arrive. It needs a current Chrome or Edge, and routing stops when the page is closed. It's unofficial and not affiliated with Novation, Roland, Waldorf or Akai.</p>
+    <p>Visits to this page are counted anonymously with <a href="https://www.goatcounter.com/" target="_blank" rel="noopener">GoatCounter</a>, which uses no cookies. It never receives your MIDI or setups.</p>
+
+    <h3>Set up</h3>
+    <ol>
+      <li>Connect each instrument and the keyboard controller to the computer with USB, and turn them on.</li>
+      <li>Allow MIDI access when asked. If it says MIDI blocked, click the icon to the left of the address, set <b>MIDI devices</b> to Allow, then click <b>Allow MIDI</b>.</li>
+      <li>Check the <b>Devices</b> list. Each one is recognised by its name. If your keyboard shows as Other, set it to Keyboard.</li>
+      <li>Set each instrument's channel to the one it listens on. The S-1 starts on 3 and the others on 1.</li>
+    </ol>
+
+    <h3>Quick routes</h3>
+    <ul>
+      <li><b>Keyboard plays</b>: click an instrument and the keyboard plays it, with its knobs, pitch bend and mod wheel. Click several to layer them. <b>Octave</b> moves what it plays up or down.</li>
+      <li><b>S-1 sequencer plays</b>: the S-1's sequenced notes play the instruments you click. The S-1 has to send its notes over USB, so check its MIDI settings if nothing arrives. Turn the S-1's volume down if you only want to hear the others. Watch the monitor to see what it sends.</li>
+      <li><b>Clock comes from</b>: one instrument's tempo, start and stop go to the ones you click, so their sequencers and arpeggiators follow it. Each one also has to be set to follow external clock.</li>
+    </ul>
+
+    <h3>All routes</h3>
+    <ul>
+      <li>Every route, including quick ones, is listed here and can be changed. A route takes one input, on every channel or just one, and passes notes, knobs, program changes or clock to one output, on its own channel if you choose.</li>
+      <li>Turning a route off, or changing it, ends any notes it was holding, so nothing gets stuck. <b>Panic</b> silences everything.</li>
+      <li>An instrument can't be routed to itself, as that would loop. Loops through two instruments are still possible, for example if both send back what they receive, so watch the monitor if notes repeat.</li>
+      <li><b>Save setup</b> keeps the routes under a name, and choosing it from <b>Setup</b> brings them back. <b>Back up</b> and <b>Restore</b> keep everything in a file.</li>
+    </ul>
+
+    <h3>With the grids</h3>
+    <ul>
+      <li>S-1 Grid, MPC Grid and Protein Grid send straight to their instruments, so they work alongside this page, open in other tabs. Routes here only carry what the instruments and keyboard themselves send.</li>
+    </ul>
+  </div>
+</dialog>
+
+<script src="routing.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

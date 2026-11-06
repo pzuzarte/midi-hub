@@ -1,0 +1,8 @@
+{
+  "name": "midi-hub",
+  "private": true,
+  "description": "Routes MIDI between instruments and a keyboard controller, in the browser.",
+  "scripts": {
+    "test": "node --test \"test/*.test.js\""
+  }
+}
