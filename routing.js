@@ -9,6 +9,7 @@ const Routing = (() => {
     { id: "protein", name: "Protein", match: /protein/i, channel: 1 },
     { id: "mpcSample", name: "MPC Sample", match: /mpc ?sample/i, channel: 1 },
     { id: "mpcOne", name: "MPC One", match: /mpc ?one/i, channel: 1 },
+    { id: "td3", name: "TD-3", match: /\bTD-?3\b/i, channel: 1 },
   ];
   const KEYBOARD = /key ?step|launch ?key|keylab|mini ?lab|impulse|oxygen|keystation|komplete kontrol|nektar|\bmpk|a-?series|sl ?mk|microkey|keyboard/i;
 

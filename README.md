@@ -1,6 +1,6 @@
 # MIDI Hub
 
-Routes MIDI between instruments and a keyboard controller, from one page in the browser. It's set up for a Novation Bass Station, Roland AIRA Compact S-1, Waldorf Protein, MPC Sample and MPC One, and works with any USB MIDI device. It's unofficial and not affiliated with any of their makers.
+Routes MIDI between instruments and a keyboard controller, from one page in the browser. It's set up for a Novation Bass Station, Roland AIRA Compact S-1, Waldorf Protein, Behringer TD-3, MPC Sample and MPC One, and works with any USB MIDI device. It's unofficial and not affiliated with any of their makers.
 
 - **Quick routes**: choose which instruments the keyboard plays, which ones the S-1's sequencer plays, and where the clock comes from and goes, with one click each.
 - **All routes**: any input to any output, filtered by channel and message type, with channel changes and transposing.

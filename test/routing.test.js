@@ -11,6 +11,8 @@ test("ports are recognised by name", () => {
   assert.equal(Routing.guessRole("Waldorf Protein"), "protein");
   assert.equal(Routing.guessRole("MPC Sample"), "mpcSample");
   assert.equal(Routing.guessRole("MPC One MIDI Port"), "mpcOne");
+  assert.equal(Routing.guessRole("TD-3-MO"), "td3");
+  assert.equal(Routing.guessRole("TD-3"), "td3");
   assert.equal(Routing.guessRole("Arturia KeyStep 37"), "keyboard");
   assert.equal(Routing.guessRole("IAC Driver Bus 1"), "other");
   assert.equal(Routing.guessRole("JS-10"), "other");
