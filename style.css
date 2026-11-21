@@ -143,3 +143,18 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
   .main { grid-template-columns: minmax(0, 1fr); }
   .routes-wrap { overflow-x: auto; }
 }
+
+/* The menu of every tool, the same on each page. Each opens in its own tab, and a tab
+   already open for it is reused, so the grids can stay open together. */
+.tool-menu { position: relative; }
+.tool-menu summary { display: inline-flex; align-items: center; height: 30px; padding: 0 11px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; cursor: pointer; list-style: none; user-select: none; }
+.tool-menu summary::-webkit-details-marker { display: none; }
+.tool-menu summary::after { content: ""; margin-left: 7px; border: 4px solid transparent; border-top-color: currentColor; transform: translateY(2px); }
+.tool-menu[open] summary, .tool-menu summary:hover { border-color: var(--muted); }
+.tool-menu nav { position: absolute; z-index: 50; top: calc(100% + 4px); right: 0; display: flex; flex-direction: column; min-width: 190px; padding: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
+.tool-menu nav a { padding: 7px 10px; color: var(--text); border-radius: 4px; font-size: 13px; text-decoration: none; }
+.tool-menu nav a:hover, .tool-menu nav a:focus-visible { background: var(--panel-2); }
+.tool-menu nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }
+.tool-menu nav hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--line); }
+.tool-menu nav button { height: auto; padding: 7px 10px; color: var(--text); text-align: left; background: none; border: 0; border-radius: 4px; font-size: 13px; }
+.tool-menu nav button:hover { background: var(--panel-2); }

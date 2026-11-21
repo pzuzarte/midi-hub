@@ -28,7 +28,20 @@
   <span id="midi-state" class="pill">MIDI: starting</span>
   <button id="midi-retry" type="button" hidden>Allow MIDI</button>
   <button id="panic" type="button" title="Sends all notes off to every instrument">Panic</button>
-  <button id="theme-toggle" type="button" title="Switch between dark and light mode">Light mode</button>
+  <details class="tool-menu">
+    <summary title="Open another of the tools, in its own tab">Tools</summary>
+    <nav aria-label="Tools">
+      <a href="https://pzuzarte.github.io/s1-grid/" target="s1-grid">S-1 Grid</a>
+      <a href="https://pzuzarte.github.io/protein-grid/" target="protein-grid">Protein Grid</a>
+      <a href="https://pzuzarte.github.io/bass-station-grid/" target="bass-station-grid">Bass Station Grid</a>
+      <a href="https://pzuzarte.github.io/mpc-grid/" target="mpc-grid">MPC Grid</a>
+      <a href="https://pzuzarte.github.io/td3-grid/" target="td3-grid">TD-3 Grid</a>
+      <a href="https://pzuzarte.github.io/song-grid/" target="song-grid">Song Grid</a>
+      <a href="https://pzuzarte.github.io/midi-hub/" target="midi-hub" aria-current="page">MIDI Hub</a>
+      <hr>
+      <button id="theme-toggle" type="button" title="Switch between dark and light mode">Light mode</button>
+    </nav>
+  </details>
   <button id="help-open" type="button" title="Help (press ?)">Help</button>
 </header>
 
@@ -149,5 +162,14 @@
 
 <script src="routing.js"></script>
 <script src="app.js"></script>
+<script>
+  // The tools menu closes when you click elsewhere or press Escape.
+  document.addEventListener("click", (event) => {
+    for (const menu of document.querySelectorAll(".tool-menu[open]")) if (!menu.contains(event.target)) menu.open = false;
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") for (const menu of document.querySelectorAll(".tool-menu[open]")) menu.open = false;
+  });
+</script>
 </body>
 </html>
