@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MIDI Hub</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=202611222333">
 <script>
   // Set before the page draws, so it doesn't flash the other theme.
   try { if (localStorage.getItem("midi-hub-theme") === "light") document.documentElement.dataset.theme = "light"; } catch {}
@@ -160,8 +160,8 @@
   </div>
 </dialog>
 
-<script src="routing.js"></script>
-<script src="app.js"></script>
+<script src="routing.js?v=202611222333"></script>
+<script src="app.js?v=202611222333"></script>
 <script>
   // The tools menu closes when you click elsewhere or press Escape.
   document.addEventListener("click", (event) => {
