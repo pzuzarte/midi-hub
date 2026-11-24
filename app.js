@@ -1,7 +1,8 @@
 "use strict";
 
 const STORE_KEY = "midi-hub";
-const THEME_KEY = "midi-hub-theme";
+// Shared by all the grids, so switching one switches them all.
+const THEME_KEY = "midi-grids-theme";
 const MONITOR_LINES = 200;
 const LIGHT_MS = 120;
 
@@ -573,13 +574,18 @@ function log(line) {
 function setTheme(theme) {
   if (theme === "light") document.documentElement.dataset.theme = "light";
   else delete document.documentElement.dataset.theme;
-  $("theme-toggle").textContent = theme === "light" ? "Dark mode" : "Light mode";
+  $("theme-toggle").textContent = theme === "light" ? "☾" : "☀";
   try {
     localStorage.setItem(THEME_KEY, theme);
   } catch {
     // Private windows can refuse storage, so the theme just isn't remembered.
   }
 }
+
+// Follows a switch made on another grid open in this browser.
+window.addEventListener("storage", (event) => {
+  if (event.key === THEME_KEY && event.newValue) setTheme(event.newValue === "light" ? "light" : "dark");
+});
 
 /* ---------- Controls ---------- */
 
@@ -609,7 +615,7 @@ function bindControls() {
     if (file) restoreBackup(file);
   });
   $("theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light"));
-  $("theme-toggle").textContent = document.documentElement.dataset.theme === "light" ? "Dark mode" : "Light mode";
+  $("theme-toggle").textContent = document.documentElement.dataset.theme === "light" ? "☾" : "☀";
   $("help-open").addEventListener("click", () => $("help").showModal());
   $("help-close").addEventListener("click", () => $("help").close());
   $("help").addEventListener("click", (event) => { if (event.target === $("help")) $("help").close(); });
